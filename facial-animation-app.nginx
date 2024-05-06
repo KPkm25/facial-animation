@@ -1,0 +1,25 @@
+server {
+    server_name 168.62.187.142;
+    root /home/azureuser/facial-animation/build;
+    index index.html;
+
+    location / {
+    try_files $uri /index.html;
+        add_header Cache-Control "no-cache";
+    }
+
+    location /static {
+        expires 1y;
+        add_header Cache-Control "public";
+    }
+
+    location /api {
+        include proxy_params;
+        proxy_pass http://localhost:5001;
+    }
+}
+
+server {
+    server_name 168.62.187.142;
+    return 301 168.62.187.142$request_uri;
+}

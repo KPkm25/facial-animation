@@ -12,6 +12,12 @@
   #dark{
     position: relative;
     left:-70px;
+    color: rgb(207, 159, 255);
+  }
+  #light{
+    position: relative;
+    left:10px;
+    color: rgb(207, 159, 255);
   }
 
   

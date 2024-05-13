@@ -446,6 +446,7 @@ class View extends Component {
                     {this.state.popup && (
                       <div className="background">
                         <div className="popup">
+                          <div className="khud-likha">
                           <div id="popup-text">{this.state.popupText}</div>
                           <button
                             id="popup-close"
@@ -454,6 +455,7 @@ class View extends Component {
                           >
                             X
                           </button>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -493,7 +495,7 @@ class View extends Component {
                       <div className="background">
                         <div className="popup">
                           <div id="info-head">
-                            Audio-driven facial animation
+                            Svara-Rachana
                           </div>
                           <div id="info-authors">
                             Authors: Małgorzata Nowicka, Filip Zawadka
@@ -584,7 +586,7 @@ class View extends Component {
                             ref={this.themeSlider}
                           />
                           <span class="slider round"></span>
-                          <div>Light</div>
+                          <div id="light">Light</div>
                         </label>
                         <label id="choose-file" className="horizontal vert">
                           <div className="styled-button">Choose file</div>

@@ -472,7 +472,7 @@ class Model extends Component {
 
   async animate() {
     // main animation loop
-    console.log("before if")
+    // console.log("before if")
     if (this.state.animationStatus === "PLAY" && this.modelControlActive) {
       console.log("after if")
       // get the next frame/viseme

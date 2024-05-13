@@ -20,7 +20,9 @@ print("Initializing Flask app")  # Add this line
 
 db = flask_sqlalchemy.SQLAlchemy()
 guard = flask_praetorian.Praetorian()
-cors = flask_cors.CORS()
+# cors = flask_cors.CORS()
+cors = flask_cors.CORS(supports_credentials=True, expose_headers=["Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods"])
+
 
 
 # A generic user model that might be used by an app powered by flask-praetorian
@@ -56,14 +58,14 @@ class User(db.Model):
 
 # Initialize flask app for the example
 app = flask.Flask(__name__, static_folder='../build', static_url_path=None)
-flask_cors.CORS(app, resources={r"/api/*": {"origins": "http://localhost:5001"}})
+# flask_cors.CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
 app.debug = True
 app.config['SECRET_KEY'] = 'top secret'
 app.config['JWT_ACCESS_LIFESPAN'] = {'hours': 24}
 app.config['JWT_REFRESH_LIFESPAN'] = {'days': 30}
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['UPLOAD_EXTENSIONS'] = ['.wav', '.mp3']
+app.config['UPLOAD_EXTENSIONS'] = ['.wav', '.mp3','.webm']
 app.config['STATIC_SOURCE'] = 'static'
 
 try:
@@ -208,53 +210,66 @@ def protected():
 #     # print('allowed file',filename.rsplit('.', 1))
 #     # return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['UPLOAD_EXTENSIONS']
 #     # return '.' in filename and filename.rsplit('.', 1)[1].lower().strip() in app.config['UPLOAD_EXTENSIONS']
-#     ext = filename.rsplit('.', 1)[1].lower()
+#     exti = filename.rsplit('.', 1)[1].lower()
+#     print(filename.rsplit('.', 1))
+#     ext = '.'+exti
 #     print('Extension:', ext)
 #     print('Allowed Extensions:', app.config['UPLOAD_EXTENSIONS'])
 #     print('Comparison Result:', ext in app.config['UPLOAD_EXTENSIONS'])
 
 #     return '.' in filename and ext in app.config['UPLOAD_EXTENSIONS']
 
-    # """
-    # Endpoint for receiving the uploaded file and returning the mapped model prediction
-    # """
-    # file = flask.request.files['file']
-    # filename = secure_filename(file.filename)
-    # print(file)
-    # print(filename)
+#     """
+#     Endpoint for receiving the uploaded file and returning the mapped model prediction
+#     """
+#     file = flask.request.files['file']
+#     filename = secure_filename(file.filename)
+#     print(file)
+#     print(filename)
 
-    # if filename != '':
-    #     file_ext = os.path.splitext(filename)[1]
-    #     print(file_ext)
-    #     if file_ext not in app.config['UPLOAD_EXTENSIONS']:
-    #         return flask.jsonify(status=404, message='Extension')
+#     if filename != '':
+#         file_ext = os.path.splitext(filename)[1]
+#         print(file_ext)
+#         if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+#             return flask.jsonify(status=404, message='Extension')
 
-    # destination = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    # file.save(destination)
+#     destination = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#     file.save(destination)
 
-    # if model == None:
-    #     return flask.jsonify(status=404, message='Model')
+#     if model == None:
+#         return flask.jsonify(status=404, message='Model')
 
-    # # Pass the file to the ml model
-    # audio_file, loaded_sample_rate = load(destination)
-    # # Change the frequency
-    # audio_file = resample(audio_file, loaded_sample_rate, SAMPLE_RATE)
-    # # Extract mfcc
-    # mfcc_coeff = mfcc(audio_file, SAMPLE_RATE)
-    # # Use the model
-    # prediction = model.predict(mfcc_coeff[np.newaxis, :, :])
-    # # Map from model encoding to phones
-    # phone_result = [timit_index_map[np.argmax(ph)] for ph in prediction[0]]
-    # # Map from phones to visemes
-    # viseme_result = [viseme_char_map[ph] for ph in phone_result]
+#     # Pass the file to the ml model
+#     audio_file, loaded_sample_rate = load(destination)
+#     # Change the frequency
+#     audio_file = resample(audio_file, loaded_sample_rate, SAMPLE_RATE)
+#     # Extract mfcc
+#     mfcc_coeff = mfcc(audio_file, SAMPLE_RATE)
+#     # Use the model
+#     prediction = model.predict(mfcc_coeff[np.newaxis, :, :])
+#     # Map from model encoding to phones
+#     phone_result = [timit_index_map[np.argmax(ph)] for ph in prediction[0]]
+#     # Map from phones to visemes
+#     viseme_result = [viseme_char_map[ph] for ph in phone_result]
 
-    # return flask.jsonify(status=200, result=viseme_result)
+#     return flask.jsonify(status=200, result=viseme_result)
+
+
+# @app.route('/api/upload', methods=['OPTIONS'])
+# def handle_options():
+#     return '', 200, {
+#         'Access-Control-Allow-Origin': 'http://localhost:3000',
+#         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+#         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+#     }
+
 @app.route('/api/upload', methods=['POST'])
 # @flask_praetorian.auth_required
 def file_upload():
     """
     Endpoint for receiving the uploaded file and returning the mapped model prediction
     """
+    print("ji")
     file = flask.request.files['file']
     filename = secure_filename(file.filename)
     print(file)
@@ -263,18 +278,26 @@ def file_upload():
     if filename != '':
         file_ext = os.path.splitext(filename)[1]
         print(file_ext)
+        print(app.config['UPLOAD_EXTENSIONS'])
         if file_ext not in app.config['UPLOAD_EXTENSIONS']:
             return flask.jsonify(status=404, message='Extension')
+        
 
     destination = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    # print(destination)
+    print("destination is",destination)
     file.save(destination)
 
     if model == None:
         return flask.jsonify(status=404, message='Model')
 
-    # Pass the file to the ml model
-    audio_file, loaded_sample_rate = load(destination)
+        # Check if the file is a webm file and convert it to wav
+    if file_ext == '.webm':
+        audio_file, loaded_sample_rate = load(destination)
+        # Convert webm to wav format
+        destination = destination.replace('.webm', '.wav')
+        os.system(f"ffmpeg -i {destination} {destination.replace('.webm', '.wav')}")
+    else:
+        audio_file, loaded_sample_rate = load(destination)
     print('loaded_sample_rate', loaded_sample_rate)
     print('audio_file',audio_file)
     # Change the frequency
@@ -290,6 +313,8 @@ def file_upload():
     viseme_result = [viseme_char_map[ph] for ph in phone_result]
 
     return flask.jsonify(status=200, result=viseme_result)
+
+    
 
 
 

@@ -132,6 +132,7 @@ b{
 #popup-text{
     color: var(--focus);
     font-size: 40px;
+    margin: 15px;
 }
 
 #popup-close{
@@ -156,7 +157,7 @@ b{
     background-color: transparent;
     border: none;
     cursor: pointer;
-    color: var(--secondary);
+    color: rgb(207, 159, 255);
 }
 
 .styled-button:focus{
@@ -178,7 +179,7 @@ input[type="file"] {
 #upload-button{
     padding: 0;
     /* margin-top: -40px; */
-    height: fit-content;
+    height: 10px;
     width: fit-content;
     position: absolute;
     top: 350px;
@@ -190,23 +191,38 @@ input[type="file"] {
     left: 400px;
 }
 
+.khud-likha{
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px;
+    height: 30%;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgb(207, 159, 255,0.8);
+    border-radius: 25px;
+}
+
 #exp-int{
     position: absolute;
     left:70px;
     bottom: 145px;
     text-align: left;
+    color: rgb(207, 159, 255);
 }
 
 #slider{
     position: absolute;
     left: -60px;
-    bottom: 140px;
+    bottom: 95px;
 }
 
 #slider-value{
     position: absolute;
     left: 215px;
     bottom: 145px;
+    color: rgb(207, 159, 255);
 }
 
 #progress{

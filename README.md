@@ -1,6 +1,6 @@
 # Audio driven facial animation
 
-Bachelor thesis project providing an interactive web application with the core functionality of uploading an audio file with human speech and displaying the corresponding lip movements on the provided avatar basing on the output of an LSTM neural network model on the remote server.
+Bachelor project providing an interactive web application with the core functionality of uploading an audio file with human speech and displaying the corresponding lip movements on the provided avatar basing on the output of an LSTM neural network model on the remote server.
 
 ## Setup
 
@@ -95,4 +95,4 @@ See the model preparation in the `ml_model_folder`.
 
 ## Authors
 
-Małgorzata Nowicka and Filip Zawadka
+Karan Khandelwal, Krishiv Pandita, Kshitij Priyankar, Kumar Parakram

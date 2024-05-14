@@ -498,15 +498,7 @@ class View extends Component {
                             Svara-Rachana
                           </div>
                           <div id="info-authors">
-                            Authors: Małgorzata Nowicka, Filip Zawadka
-                          </div>
-                          <div id="info-text">
-                            This application is a realization of the author's
-                            Bachelor's thesis project at the Warsaw University
-                            of Technology. It generates animation for given
-                            speech recording. The application integrates the
-                            trained long short-term memory neural network model,
-                            residing on the remote server.
+                            Authors: Karan Khandelwal, Krishiv Pandita, Kshitij Priyankar, Kumar Parakram
                           </div>
                           <div id="info-inst-head">Instruction:</div>
                           <div id="info-inst">

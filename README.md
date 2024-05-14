@@ -80,15 +80,6 @@ https://user-images.githubusercontent.com/49707233/179067976-20759816-8cfc-41ac-
 
 
 
-
-## Public access
-
-~~You can access the web application through the link: https://facialanimation.page/.~~ Not supported!
-
-<!-- Contact one of the contributors of the project to gain the valid credentials.  -->
-
-Use the exemplary files in audio_files folder.
-
 ## Project structure
 
 See the model preparation in the `ml_model_folder`.

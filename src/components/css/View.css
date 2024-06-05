@@ -318,4 +318,6 @@ canvas {
     left: 20px;
     text-decoration: underline;
     width: fit-content;
+    color: rgb(207, 159, 255);
+    opacity: 0.7;
 }

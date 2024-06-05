@@ -3,7 +3,7 @@ import flask
 import flask_sqlalchemy
 import flask_praetorian
 import flask_cors
-from flask import jsonify
+from flask import jsonify, make_response
 from werkzeug.utils import secure_filename
 from phoneme_to_viseme import viseme_char_map
 from phoneme_decoder import timit_index_map

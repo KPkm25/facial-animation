@@ -233,115 +233,69 @@ class View extends Component {
 
   handleRecording(recording) {
     // registers the newly recorded file
+    console.log("Recording started...");
     this.stop();
+    const filename = "Recording"; // Set a default filename for the recorded audio
     this.setState({
-      file: recording,
-      inputProcessed: false,
-      filename: "Recording",
+        file: recording,
+        inputProcessed: false,
+        filename: filename,
+    }, () => {
+        console.log("State updated:", this.state);
+        this.audio.src = URL.createObjectURL(recording);
+        console.log("Audio src:", this.audio.src);
+        this.sendFile(); // Call sendFile after setting the state
     });
-    this.audio.src = URL.createObjectURL(recording);
+}
 
-    console.log(this.state.file, this.audio.src);
-  }
 
-  // async sendFile() {
-  //   // send the request to the server with the current audio file
-  //   if (this.state.file) {
-  //     // prepare audio file for request
-  //     const data = new FormData();
-  //     data.append("file", this.state.file);
   
-  //     this.setState({ inputProcessed: undefined });
-  //     this.stop();
-  
-  //     // fetch with CORS handling
-  //     const apiUrl = "http://localhost:5000/api/upload";
-  
-  //     fetch(apiUrl, {
-  //       method: "POST",
-  //       body: data,
-  //       mode: "cors", // specify cors mode
-  //     })
-  //       // handle the response
-  //       .then((res) => {
-  //         console.log("trial",res);
-  //         if (res.status !== 200) {
-  //           console.log("Server failure!");
-  //           this.setState({ inputProcessed: false });
-  //           this.openPopup("Server failure!");
-  //           return null;
-  //         }
-  //         console.log("reach here");
-  //         return res.json();
-  //       })
-  //       .then((res) => {
-  //         console.log("res", res);
-  //         if (res) {
-  //           if (res.status === 200) {
-  //             // console.log("trial",res.json());
-  //             this.processResponse(res.result);
-  //           } else if (res.message === "Extension") {
-  //             this.setState({ inputProcessed: false });
-  //             this.openPopup("Incorrect extension! Upload .wav and .mp3 files.");
-  //           } else if (res.message === "Model") {
-  //             this.setState({ inputProcessed: false });
-  //             this.openPopup("Model failure!");
-  //           }
-  //         }
-  //       });
-  //   } else {
-  //     this.openPopup("Choose a file!");
-  //   }
-  // }
-
   
   async sendFile() {
     console.log('Sending file:', this.state.file);
 
-    // send the request to the server with the current audio file
-    if (this.state.file) {
-        // prepare audio file for request
+    if (this.state.file || this.state.audioBlob) { // Check if either file or audioBlob exists
+        const fileToSend = this.state.audioBlob ? new File([this.state.audioBlob], "recording.wav", { type: "audio/wav", lastModified: Date.now() }) : this.state.file;
+
         const data = new FormData();
-        data.append("file", this.state.file);
+        data.append("file", fileToSend);
 
         this.setState({ inputProcessed: undefined });
         this.stop();
-        console.log("data",data);
 
-        // simple fetch without authentication
         fetch("http://localhost:5001/api/upload", { method: "POST", body: data })
-    .then((res) => {
-        console.log("Oyeeeeeeeeeeeeee");
-        console.log("Boyeeeeeeeeeeeeeee", res);
-        return res.json(); // move the return statement here
-    })
-    .then((res) => {
-        console.log("res",res);
+            .then((res) => {
+                console.log("Oyeeeeeeeeeeeeee");
+                console.log("Boyeeeeeeeeeeeeeee", res);
+                return res.json(); // move the return statement here
+            })
+            .then((res) => {
+                console.log("res",res);
 
-        if (res) {
-          console.log('hi')
-            if (res.status === 200) {
-                this.processResponse(res.result);
-            } else if (res.message === "Extension") {
+                if (res) {
+                    console.log('hi')
+                    if (res.status === 200) {
+                        this.processResponse(res.result);
+                    } else if (res.message === "Extension") {
+                        this.setState({ inputProcessed: false });
+                        this.openPopup("Incorrect extension! Upload .wav and .mp3 files.");
+                    } else if (res.message === "Model") {
+                        this.setState({ inputProcessed: false });
+                        this.openPopup("Model failure!");
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error('Error during fetch:', error);
                 this.setState({ inputProcessed: false });
-                this.openPopup("Incorrect extension! Upload .wav and .mp3 files.");
-            } else if (res.message === "Model") {
-                this.setState({ inputProcessed: false });
-                this.openPopup("Model failure!");
-            }
-        }
-    })
-    .catch((error) => {
-        console.error('Error during fetch:', error);
-        this.setState({ inputProcessed: false });
-        this.openPopup("Error during file upload.");
-    });
-
+                this.openPopup("Error during file upload.");
+            });
     } else {
         console.log("Choose a file!");
         this.openPopup("Choose a file!");
     }
 }
+
 
 
   mapSliderValue(x) {

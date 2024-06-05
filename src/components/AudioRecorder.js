@@ -50,6 +50,16 @@ class AudioRecorder extends Component {
     }
   };
 
+  onStop = (recordedBlob) => {
+    console.log("recordedBlob is: ", recordedBlob);
+    this.props.newRecording(
+      new File([recordedBlob.blob], "recording.wav", {
+        type: "audio/wav",
+        lastModified: Date.now(),
+      })
+    );
+  };
+
   render() {
     return (
       <div id="recorder-container">
@@ -69,21 +79,24 @@ class AudioRecorder extends Component {
               onClick={this.stopRecording}
               type="button"
             >
-              Stop recording
+              Stop
             </button>
           )}
         </div>
         <Transition timeout={300} in={!!this.state.audioBlob}>
           {(state) => (
-            <div style={{ ...defaultStyle, ...transitionStyles[state] }}>
-              <a
-                className="record download"
-                href={this.state.audioBlob && URL.createObjectURL(this.state.audioBlob)}
-                download="recording.wav"
-              >
-                Download
-              </a>
-            </div>
+            <>
+              <div style={{ ...defaultStyle, ...transitionStyles[state] }}>
+                <a
+                  className="record download"
+                  href={this.state.audioBlob && URL.createObjectURL(this.state.audioBlob)}
+                  download="recording.wav"
+                >
+                  Download
+                </a>
+              </div>
+              {this.state.recording && <div id="timer">{this.state.timer}</div>}  
+            </>
           )}
         </Transition>
       </div>

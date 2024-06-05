@@ -24,7 +24,7 @@
 
 a[href^="blob:"]{
     text-decoration: none;
-    color: var(--secondary)
+    /* color: var(--secondary) */
 }
 
 a[href^="blob:"]:hover{
@@ -34,13 +34,15 @@ a[href^="blob:"]:hover{
 
 .download{
     position:relative;
-    left: 120px;
+    left:130px;
     top: -35px;
     z-index: 100;
+    color: rgb(207, 159, 255);
 }
 
 #timer{
     position: relative;
-    top:-65px;
+    top:-25px;
     left: 10px;
+    color: rgb(207, 159, 255);
 }
